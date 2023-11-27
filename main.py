@@ -1,12 +1,15 @@
-import tkinter as tk
-from UI import UI
-from Server import Server
+from view import View
+from server import Server
+from controller import Controller
+
+
+def main():
+    server = Server()
+    view = View()
+    controller = Controller(view, server)
+    controller.run_view()
+    server.server_close()
 
 
 if __name__ == "__main__":
-    server = Server()
-    server.start()
-
-    root = tk.Tk()
-    window = UI(root)
-    root.mainloop()
+    main()
