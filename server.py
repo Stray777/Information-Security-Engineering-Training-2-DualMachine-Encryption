@@ -9,17 +9,19 @@ class Server:
         self.server_socket.bind(("0.0.0.0", 12345))
         self.server_socket.listen(2)
         print("Server listening on port 12345")
+        self.recv_thread = None
+        self.send_thread = None
 
     def server_close(self):
         self.server_socket.close()
 
     def receive(self):
-        recv_thread = threading.Thread(target=self.recv_from_client, daemon=True)
-        recv_thread.start()
+        self.recv_thread = threading.Thread(target=self.recv_from_client, daemon=True)
+        self.recv_thread.start()
 
     def send(self, message):
-        send_thread = threading.Thread(target=self.send_to_client, daemon=True, args=(message,))
-        send_thread.start()
+        self.send_thread = threading.Thread(target=self.send_to_client, daemon=True, args=(message,))
+        self.send_thread.start()
 
     def recv_from_client(self):
         message = ""
@@ -38,15 +40,10 @@ class Server:
         return message
 
     def send_to_client(self, message):
-        while True:
-            messagebox.showinfo("分享密钥", "发送中，请关闭此窗口以等待...")
-            client_socket, client_addr = self.server_socket.accept()
-            try:
-                client_socket.send(bytes(message, 'utf-8'))
-                messagebox.showinfo("成功", "分享密钥成功")
-                break
-            except Exception as e:
-                print(f"Error sending message to client: {str(e)}")
-                break
-
-        client_socket.close()
+        messagebox.showinfo("分享密钥", "发送中，请关闭此窗口以等待...")
+        client_socket, client_addr = self.server_socket.accept()
+        try:
+            client_socket.send(bytes(message, 'utf-8'))
+            messagebox.showinfo("成功", "分享密钥成功")
+        except Exception as e:
+            print(f"Error sending message to client: {str(e)}")

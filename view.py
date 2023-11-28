@@ -15,7 +15,7 @@ class View:
 
         # 创建容器
         self.frame1 = tk.Frame(self.root, bd=2, relief=tk.GROOVE, padx=15, pady=15)
-        self.frame1.pack(side="left", padx=15)
+        self.frame1.pack(pady=30)
 
         # 容器1
         self.label_encrypt = tk.Label(self.frame1, text="加密", font=("Helvetica", 20, "bold"))
