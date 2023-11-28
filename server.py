@@ -1,5 +1,6 @@
 import socket
 import threading
+import time
 from tkinter import messagebox
 
 
@@ -9,41 +10,49 @@ class Server:
         self.server_socket.bind(("0.0.0.0", 12345))
         self.server_socket.listen(2)
         print("Server listening on port 12345")
-        self.recv_thread = None
         self.send_thread = None
+        self.client_socket = None
+        self.client_addr = None
+        self.recv_thread = threading.Thread(target=self.recv_from_client, daemon=True)
+        self.recv_thread.start()
 
     def server_close(self):
         self.server_socket.close()
 
-    def receive(self):
-        self.recv_thread = threading.Thread(target=self.recv_from_client, daemon=True)
-        self.recv_thread.start()
-
-    def send(self, message):
-        self.send_thread = threading.Thread(target=self.send_to_client, daemon=True, args=(message,))
+    def send(self, message, file_id):
+        self.send_thread = threading.Thread(target=self.send_to_client, daemon=True, args=(message, file_id))
         self.send_thread.start()
 
     def recv_from_client(self):
-        message = ""
         while True:
-            client_socket, client_addr = self.server_socket.accept()
+            if self.client_socket is None:
+                self.client_socket, self.client_addr = self.server_socket.accept()
             try:
-                message += client_socket.recv(1024).decode('utf-8')
-                if not message:
+                message1 = self.client_socket.recv(1024).decode('utf-8')
+                message2 = self.client_socket.recv(1024).decode('utf-8')
+                if not message1:
+                    self.client_socket.close()
+                    self.client_socket = None
+                    self.client_addr = None
                     break
-                print(f"Received message from {client_addr}: {message}")
+                with open(message1, 'w') as file:
+                    file.write(message2)
+                messagebox.showinfo("接收", f"已接收客户端传来的文件:{message1}")
             except Exception as e:
-                print(f"Error handling client {client_addr}: {str(e)}")
-                break
+                print(f"Error handling client {self.client_addr}: {str(e)}")
+                self.client_socket = None
+                self.client_addr = None
 
-        client_socket.close()
-        return message
-
-    def send_to_client(self, message):
-        messagebox.showinfo("分享密钥", "发送中，请关闭此窗口以等待...")
-        client_socket, client_addr = self.server_socket.accept()
+    def send_to_client(self, message, file_id):
+        messagebox.showinfo("发送", "发送中，请关闭此窗口以等待...")
+        if self.client_socket is None:
+            self.client_socket, self.client_addr = self.server_socket.accept()
         try:
-            client_socket.send(bytes(message, 'utf-8'))
-            messagebox.showinfo("成功", "分享密钥成功")
+            if file_id == 1:
+                self.client_socket.send(bytes("key.txt", 'utf-8'))
+            elif file_id == 2:
+                self.client_socket.send(bytes("ciphertext.txt", 'utf-8'))
+            self.client_socket.send(bytes(message, 'utf-8'))
+            messagebox.showinfo("成功", "发送成功")
         except Exception as e:
             print(f"Error sending message to client: {str(e)}")

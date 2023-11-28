@@ -10,10 +10,15 @@ class Controller:
         self.view.set_button_file1(self.open_file)
         self.view.set_button_encrypt(self.encrypt_on_button_click)
         self.view.set_button_sharekey(self.share_click)
+        self.view.set_button_send(self.send_click)
+
+    def send_click(self):
+        ciphertext = self.view.text_cipher.get("1.0", "end").strip('\n')
+        self.server.send(ciphertext, 2)
 
     def share_click(self):
         key = self.view.entry_key1.get().strip('\n')
-        self.server.send(key)
+        self.server.send(key, 1)
 
     def encrypt_on_button_click(self):
         """加密按钮"""
@@ -61,6 +66,8 @@ class Controller:
         if isinstance(algorithm, RSA):
             d = algorithm.key_d
             n = algorithm.key_n
-            self.view.pop_up_window("结果", "明文", f"密钥d:{d}\n密钥n:{n}\n密文:{cipher_text}", "关闭")
+            self.view.text_cipher.delete(1.0, tk.END)
+            self.view.text_cipher.insert(tk.END, f"密钥d:{d}\n密钥n:{n}\n密文:{cipher_text}")
         else:
-            self.view.pop_up_window("结果", "密文", cipher_text, "关闭")
+            self.view.text_cipher.delete(1.0, tk.END)
+            self.view.text_cipher.insert(tk.END, cipher_text)
