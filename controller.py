@@ -43,6 +43,18 @@ class Controller:
         elif option == "PlayfairCipher":
             playfair = PlayfairCipher(key)
             self.encrypt(playfair)
+        elif option == "VigenereCipher":
+            vigenere = VigenereCipher(key)
+            self.encrypt(vigenere)
+        elif option == "PermutationCipher":
+            permutation = PermutationCipher(key)
+            self.encrypt(permutation)
+        elif option == "AutokeyCipher":
+            autokey = AutokeyCipher(key)
+            self.encrypt(autokey)
+        elif option == "RC4":
+            rc4 = RC4(key)
+            self.encrypt(rc4)
 
     def open_file(self, button_id: int):
         """打开文本文件"""

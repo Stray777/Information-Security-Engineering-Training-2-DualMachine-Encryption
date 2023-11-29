@@ -1,6 +1,5 @@
 import socket
 import threading
-import time
 from tkinter import messagebox
 
 

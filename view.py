@@ -34,7 +34,16 @@ class View:
         self.entry_key1.grid(row=3, column=1)
         self.label_encrypt_algorithm = tk.Label(self.frame1, text="Encrypt algorithm")
         self.label_encrypt_algorithm.grid(row=4, column=0, pady=10)
-        self.encrypt_options = ["CaesarCipher", "KeywordCipher", "RSA", "PlayfairCipher"]
+        self.encrypt_options = [
+            "CaesarCipher",
+            "KeywordCipher",
+            "RSA",
+            "PlayfairCipher",
+            "VigenereCipher",
+            "PermutationCipher",
+            "AutokeyCipher",
+            "RC4"
+        ]
         self.combobox_algorithm = ttk.Combobox(self.frame1, values=self.encrypt_options, state="readonly")
         self.combobox_algorithm.bind("<<ComboboxSelected>>", self.encrypt_options_tips)
         self.combobox_algorithm.set("Select an algorithm")
