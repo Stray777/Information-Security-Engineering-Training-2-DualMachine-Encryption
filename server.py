@@ -12,6 +12,7 @@ class Server:
         self.send_thread = None
         self.client_socket = None
         self.client_addr = None
+        self.separator = '|'
         self.recv_thread = threading.Thread(target=self.recv_from_client, daemon=True)
         self.recv_thread.start()
 
@@ -27,8 +28,10 @@ class Server:
             if self.client_socket is None:
                 self.client_socket, self.client_addr = self.server_socket.accept()
             try:
-                message1 = self.client_socket.recv(1024).decode('utf-8')
-                message2 = self.client_socket.recv(1024).decode('utf-8')
+                message1 = self.client_socket.recv(1024).decode('utf-8').split(f"{self.separator}")
+                message1 = message1[0]
+                message2 = self.client_socket.recv(1024).decode('utf-8').split(f"{self.separator}")
+                message2 = message2[0]
                 if not message1:
                     self.client_socket.close()
                     self.client_socket = None
@@ -48,10 +51,10 @@ class Server:
             self.client_socket, self.client_addr = self.server_socket.accept()
         try:
             if file_id == 1:
-                self.client_socket.send(bytes("key.txt", 'utf-8'))
+                self.client_socket.sendall(bytes(f"key.txt{self.separator}", 'utf-8'))
             elif file_id == 2:
-                self.client_socket.send(bytes("ciphertext.txt", 'utf-8'))
-            self.client_socket.send(bytes(message, 'utf-8'))
+                self.client_socket.sendall(bytes(f"ciphertext.txt{self.separator}", 'utf-8'))
+            self.client_socket.sendall(bytes(message+f"{self.separator}", 'utf-8'))
             messagebox.showinfo("成功", "发送成功")
         except Exception as e:
             print(f"Error sending message to client: {str(e)}")
