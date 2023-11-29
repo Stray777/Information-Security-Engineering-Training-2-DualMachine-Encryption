@@ -42,7 +42,8 @@ class View:
             "VigenereCipher",
             "PermutationCipher",
             "AutokeyCipher",
-            "RC4"
+            "RC4",
+            "DH"
         ]
         self.combobox_algorithm = ttk.Combobox(self.frame1, values=self.encrypt_options, state="readonly")
         self.combobox_algorithm.bind("<<ComboboxSelected>>", self.encrypt_options_tips)

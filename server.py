@@ -6,7 +6,7 @@ from tkinter import messagebox
 class Server:
     def __init__(self):
         self.server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self.server_socket.bind(("0.0.0.0", 12345))
+        self.server_socket.bind(("0.0.0.0", 12344))
         self.server_socket.listen(2)
         print("Server listening on port 12345")
         self.send_thread = None

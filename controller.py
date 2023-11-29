@@ -55,6 +55,10 @@ class Controller:
         elif option == "RC4":
             rc4 = RC4(key)
             self.encrypt(rc4)
+        elif option == "DH":
+            dh = DH(key)
+            self.view.text_cipher.delete(1.0, tk.END)
+            self.view.text_cipher.insert(tk.END, dh.kk)
 
     def open_file(self, button_id: int):
         """打开文本文件"""
