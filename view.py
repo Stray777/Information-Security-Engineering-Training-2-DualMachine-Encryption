@@ -44,7 +44,8 @@ class View:
             "ColumnPermutationCipher",
             "AutokeyCipher",
             "RC4",
-            "DH"
+            "DH",
+            "DesCipher"
         ]
         self.combobox_algorithm = ttk.Combobox(self.frame1, values=self.encrypt_options, state="readonly")
         self.combobox_algorithm.bind("<<ComboboxSelected>>", self.encrypt_options_tips)
@@ -96,3 +97,5 @@ class View:
             messagebox.showinfo("RSA提醒", "每个值需要以分号( ; )隔开\nprime_p;prime_q;key_e\n如: 23;19;17")
         elif selected_item == "ColumnPermutationCipher":
             messagebox.showinfo("ColumnPermutationCipher提醒", "每个值需要以分号( ; )隔开\n如: 2;0;1")
+        elif selected_item == "DesCipher":
+            messagebox.showinfo("DES提醒", "key建议为8个字符")
